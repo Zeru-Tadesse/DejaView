@@ -3,14 +3,17 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.zip.DataFormatException;
 
+/**
+ * 
+ * @author Zeru Tadesse
+ * @version 07/04/2018 V1.2
+ * @fix lat/long input streams
+ * @update: pressing on the canvas clears screen
+ *
+ */
 public class Main
 {
-    //TO DO todo todo todo todo todo tdooooo
-    /**
-     * Location.getAddy() parser for county needs correcting
-     * Attach image to canvas
-     * 
-     */
+    @SuppressWarnings("all")
     public static void main(String[] args) throws DataFormatException, IOException
     {
         double minLong = 1000;
@@ -18,16 +21,11 @@ public class Main
         double minLat = 1000;
         double maxLat = -1000;
         double startTime = System.currentTimeMillis();
-        // getLocationsZeru();
-        // getLocationsTadesse();
         ArrayList<Location> locs = new ArrayList<Location>();
-        locs = getLocationsZeru();
+        locs = getLocationsTade();
         ArrayList<Location> nearby = new ArrayList<Location>();
-        Location home = new Location(0, 38.8578620, -77.1021790);
-        nearby = LocationTools.getNearBy(home, locs);
         double endTime = System.currentTimeMillis();
-        System.out.println("Home count: " + nearby.size());
-        System.out.println("Operation took: " + (endTime - startTime) + "Ms.");
+        System.out.println("Read Time: " + (endTime - startTime) / 1000 + " seconds.");
         for (int i = 0; i < locs.size(); i++)
         {
             if (locs.get(i).getLatitude() < minLat)
@@ -46,8 +44,6 @@ public class Main
             }
         }
         StdDraw.setCanvasSize(720, 720);
-        // StdDraw.setXscale(-120, 60);
-        // StdDraw.setYscale(-15, 60);
         StdDraw.setXscale(-79.55, -76.32);
         StdDraw.setYscale(37.83, 39.535);
         StdDraw.setPenColor(StdDraw.BLUE);
@@ -55,10 +51,17 @@ public class Main
         StdDraw.setPenColor(StdDraw.YELLOW);
         StdDraw.line(0, -120, 0, 120);
         StdDraw.setPenColor(StdDraw.BLACK);
-        // StdDraw.setPenRadius(.01);
+        double zoomXmin = -79.55;
+        double zoomXmax = -76.32;
+        double zoomYmin = 37.83;
+        double zoomYmax = 39.535;
         for (int i = locs.size() - 1; i > 1; i--)
         {
-            StdDraw.setPenRadius();
+            if (StdDraw.isMousePressed())
+            {
+                StdDraw.clear();
+            }
+            StdDraw.setPenRadius(.0005);
             StdDraw.point(locs.get(i).getLongitude(), locs.get(i).getLatitude());
             StdDraw.setPenRadius(.00001);
             StdDraw.line(locs.get(i).getLongitude(), locs.get(i).getLatitude(),
@@ -66,13 +69,18 @@ public class Main
             if (i % 10000 == 0 || i == locs.size() - 1)
                 System.out.println(locs.get(i).toStringSimple() + " \t" + locs.get(i).getAddy());
         }
-        // StdDraw.clear();
     }
 
     public static ArrayList<Location> getLocationsZeru()
                     throws FileNotFoundException, DataFormatException
     {
         return LocationReader.readFromFile("zeru.txt", "locZSimple.txt");
+    }
+
+    public static ArrayList<Location> getLocationsTade()
+                    throws FileNotFoundException, DataFormatException
+    {
+        return LocationReader.readFromFile("tadesse.txt", "locTSimple.txt");
     }
 
     public static void getLocationsTadesse() throws FileNotFoundException, DataFormatException

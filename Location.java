@@ -5,14 +5,20 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.Date;
 
+/**
+ * Location class which handles all aspects of a location including coordinates, time, and
+ * geo-locations.
+ * 
+ * @author Zeru Tadesse
+ * @version 06/25/2018 #Updated: Style and commenting.
+ * @TODO: Expand getAddy() to be flexible for a variety of address types.
+ *
+ */
 public class Location
 {
     private long time;
     private double latitude;
     private double longitude;
-    private double latConfidence;
-    private double longConfidence;
-    private String display_name;
     private int buildingNumber;
     private String streetName;
     private String city;
@@ -25,8 +31,6 @@ public class Location
         this.time = 0;
         this.latitude = 0;
         this.longitude = 0;
-        this.latConfidence = 0;
-        this.latConfidence = 0;
         System.out.println("Invalid");
     }
 
@@ -102,7 +106,7 @@ public class Location
         return "";
     }
 
-    public String getAddy() throws IOException, ArrayIndexOutOfBoundsException
+    public String getAddy() throws IOException
     {
         String tempLat = "" + this.latitude;
         String tempLong = "" + this.longitude;
@@ -125,30 +129,17 @@ public class Location
             this.buildingNumber = Integer.parseInt(
                             addressInfo.split("house_number\":\"")[1].split("\",\"road\"")[0]);
         if (addressInfo.contains("road"))
-            this.streetName = addressInfo.split("\"road\":\"")[1]
-                            .split("\",\"neighbourhood\":\"")[0];
+            this.streetName = addressInfo.split("road\":\"")[1].split("\",\"")[0];
         if (addressInfo.contains("city"))
-            this.city = addressInfo.split("\",\"city\":\"")[1].split("\",\"state\":\"")[0];
+            this.city = addressInfo.split("\",\"city\":\"")[1].split("\",\"")[0];
         else if (addressInfo.contains("county"))
-            this.city = addressInfo.split("\",\"county\":\"")[1].split("\",\"state\":\"")[0];
+            this.city = addressInfo.split("\",\"county\":\"")[1].split("\",\"")[0];
         if (addressInfo.contains("state"))
-            this.state = addressInfo.split("\",\"state\":\"")[1].split("\",\"postcode\":\"")[0];
+            this.state = addressInfo.split("\",\"state\":\"")[1].split("\",\"")[0];
         if (addressInfo.contains("country"))
             this.country = addressInfo.split("\",\"country\":\"")[1].split("\"")[0];
         if (addressInfo.contains("postcode"))
-            this.zipcode = addressInfo.split("\",\"postcode\":\"")[1].split("\",\"country\"")[0];
-        // System.out.println("========================\n\n");
-        // System.out.println(this.buildingNumber + this.streetName + this.city + this.state
-        // + this.zipcode + this.country);
-        // System.out.println("Building number: " + this.buildingNumber);
-        // System.out.println("Street Name: " + this.streetName);
-        // System.out.println("City name: " + this.city);
-        // System.out.println("State name: " + this.state);
-        // System.out.println("Zip code: " + this.zipcode);
-        // System.out.println("Country name:" + this.country);
-        // System.out.println("========================");
-        // System.out.println(jsonFile);
-        this.display_name = jsonFile.split("display_name\":\"")[1].split("\",\"address\"")[0];
+            this.zipcode = addressInfo.split("\",\"postcode\":\"")[1].split("\",\"")[0];
         return (this.buildingNumber + " " + this.streetName + " " + this.city + ", " + this.state
                         + " " + this.zipcode + " " + this.country);
     }
